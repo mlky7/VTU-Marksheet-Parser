@@ -16,5 +16,5 @@ A web-based application that allows users to upload their VTU mark sheets in PDF
 ## Tech Stack
 
 - **Backend**: Flask, pdfplumber, MongoDB
-- **Frontend**: HTML, CSS, JavaScript (if applicable)
+- **Frontend**: HTML, CSS, JavaScript
 - **Database**: MongoDB
