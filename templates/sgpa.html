@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
+    <title>VTU SGPA Calculator</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/sgpa_style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="d-flex justify-content-center align-items-center min-vh-100">
+      <div class="container">
+        <div class="card p-6">
+          <h2 class="text-center">VTU SGPA Calculator</h2>
+
+          <div class="row mt-8">
+            <div class="col-md-4">
+              <label for="scheme" class="form-label">Scheme:</label>
+              <br />
+              <select id="scheme" class="form-select">
+                <option value="2022" selected>2022</option>
+                <option value="2021">2021</option>
+                <option value="2018">2018</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="branch" class="form-label">Branch:</label>
+              <select id="branch" class="form-select">
+                <option value="CSE" selected>
+                  Computer Science & Engineering
+                </option>
+                <option value="ECE">Electronics & Communication</option>
+                <option value="ME">Mechanical Engineering</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="semester" class="form-label">Semester:</label>
+              <br />
+              <select id="semester" class="form-select">
+                <option value="#" selected>Select Semester</option>
+                <option value="Chemistry Cycle">Chemistry Cycle</option>
+                <option value="Physics Cycle">Physics Cycle</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <form
+              action="/upload"
+              method="post"
+              id="uploadForm"
+              enctype="multipart/form-data"
+            >
+              <div class="input-group mb-4">
+                <input
+                  type="file"
+                  class="form-control"
+                  name="file"
+                  accept=".pdf"
+                  id="fileInput"
+                />
+                <button class="btn btn-blue" type="submit">Upload</button>
+              </div>
+            </form>
+          </div>
+          <div class="table-container">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Subject Code</th>
+                  <th>Total Marks</th>
+                </tr>
+              </thead>
+              <tbody id="marksTableBody">
+                <!-- Generated subject codes and marks will be inserted here -->
+              </tbody>
+            </table>
+          </div>
+          <div class="table-container mt-4">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Subject Code</th>
+                  <th>Subject Credits</th>
+                  <th>Marks</th>
+                </tr>
+              </thead>
+              <tbody id="subjectsTableBody">
+                <!-- Subjects with input fields for marks -->
+              </tbody>
+            </table>
+          </div>
+          <div class="text-center mt-4">
+            <button class="btn btn-green me-2" onclick="calculateSGPA()">
+              Calculate
+            </button>
+            <button class="btn btn-red" onclick="location.href='/';">
+              Back
+            </button>
+          </div>
+          <div id="sgpaDisplay" class="result"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeEventListeners();
+      });
+
+      function initializeEventListeners() {
+        const uploadForm = document.getElementById("uploadForm");
+        uploadForm.addEventListener("submit", handleFileUpload);
+
+        document
+          .getElementById("scheme")
+          .addEventListener("change", loadSubjects);
+        document
+          .getElementById("semester")
+          .addEventListener("change", loadSubjects);
+        document
+          .getElementById("branch")
+          .addEventListener("change", loadSubjects);
+
+        loadSubjects();
+      }
+
+      function handleFileUpload(event) {
+        event.preventDefault();
+        const fileInput = document.getElementById("fileInput");
+        if (fileInput.files.length === 0) {
+          alert("Please select a file before uploading.");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+
+        fetch("/upload", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (Array.isArray(data)) {
+              console.log("Data received from upload:", data);
+              fillMarksTable(data);
+              fillMarks(data);
+            } else {
+              console.error("Unexpected data format:", data);
+            }
+          })
+          .catch((error) => console.error("Error uploading file:", error));
+      }
+
+      function loadSubjects() {
+        const scheme = document.getElementById("scheme").value;
+        const semester = document.getElementById("semester").value;
+        const branch = document.getElementById("branch").value;
+
+        if (!scheme || semester === "#" || !branch) return;
+
+        fetch(
+          `/get_subjects?scheme=${scheme}&semester=${semester}&branch=${branch}`
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Subjects data received:", data); // Debugging
+            const tableBody = document.getElementById("subjectsTableBody");
+            tableBody.innerHTML = "";
+
+            data.forEach((subject) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+          <td>${subject.SubjectCode}</td>
+          <td>${subject.SubjectCredits}</td>
+          <td><input type="number" class="form-control marks-input" placeholder="0-100" /></td>
+        `;
+              tableBody.appendChild(row);
+            });
+          })
+          .catch((error) => console.error("Error loading subjects:", error));
+      }
+
+      function fillMarksTable(marksData) {
+        const tableBody = document.getElementById("marksTableBody");
+        tableBody.innerHTML = "";
+
+        marksData.forEach((mark) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+      <td>${mark.code}</td>
+      <td>${mark.total_marks}</td>
+    `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      function fillMarks(marksData) {
+        const tableBody = document.getElementById("subjectsTableBody");
+        const rows = tableBody.getElementsByTagName("tr");
+
+        marksData.forEach((mark) => {
+          console.log(`Processing mark data for code: ${mark.code}`);
+          if (!mark.code) return;
+
+          let matched = false;
+          for (let i = 0; i < rows.length; i++) {
+            const subjectCodeCell = rows[i].cells[0]?.textContent
+              ?.trim()
+              ?.toUpperCase();
+            const markCode = mark.code.trim().toUpperCase();
+
+            if (subjectCodeCell === markCode) {
+              console.log(`Match found for code: ${mark.code}`);
+              const marksInput =
+                rows[i].cells[2].getElementsByTagName("input")[0];
+              marksInput.value = mark.total_marks;
+              matched = true;
+              break;
+            }
+          }
+
+          if (!matched) {
+            console.error(`No match found for subject code: ${mark.code}`);
+          }
+        });
+      }
+
+      function calculateSGPA() {
+        const rows = document
+          .getElementById("subjectsTableBody")
+          .getElementsByTagName("tr");
+
+        let totalCredits = 0;
+        let totalPoints = 0;
+
+        for (let row of rows) {
+          const credits = parseInt(row.cells[1]?.textContent || "0", 10);
+          const marks = parseInt(
+            row.cells[2].getElementsByTagName("input")[0]?.value || "0",
+            10
+          );
+
+          if (isNaN(marks) || isNaN(credits)) {
+            document.getElementById("sgpaDisplay").textContent =
+              "Invalid input. Ensure all marks and credits are numbers.";
+            return;
+          }
+
+          const gradePoint = calculateGradePoint(marks);
+
+          totalCredits += credits;
+          totalPoints += gradePoint * credits;
+        }
+
+        if (totalCredits === 0) {
+          document.getElementById("sgpaDisplay").textContent =
+            "Invalid inputs. Total credits cannot be zero.";
+          return;
+        }
+
+        const sgpa = (totalPoints / totalCredits).toFixed(2);
+        document.getElementById(
+          "sgpaDisplay"
+        ).textContent = `Your SGPA is: ${sgpa}`;
+      }
+
+      function calculateGradePoint(marks) {
+        if (marks >= 90) return 10;
+        if (marks >= 80) return 9;
+        if (marks >= 70) return 8;
+        if (marks >= 60) return 7;
+        if (marks >= 55) return 6;
+        if (marks >= 50) return 5;
+        if (marks >= 40) return 4;
+        return 0;
+      }
+    </script>
+  </body>
+</html>

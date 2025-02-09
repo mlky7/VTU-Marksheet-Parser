@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VTU CGPA Calculator</title>
+    <script src="{{ url_for('static', filename='js/cgpa_script.js') }}"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/cgpa_style.css') }}"
+    />
+    <style></style>
+  </head>
+  <body class="bg-light">
+    <div class="container my-5">
+      <div class="card p-4">
+        <h2 class="text-center text-primary">VTU CGPA Calculator</h2>
+        <hr />
+        <div class="mb-3">
+          <label class="form-label">Scheme:</label>
+          <div>
+            <input type="radio" id="scheme-2018" name="scheme" value="2018" />
+            <label for="scheme-2018">2018</label>
+            <input type="radio" id="scheme-2021" name="scheme" value="2021" />
+            <label for="scheme-2021">2021</label>
+            <input
+              type="radio"
+              id="scheme-2022"
+              name="scheme"
+              value="2022"
+              checked
+            />
+            <label for="scheme-2022">2022</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <label for="sem1" class="form-label">Semester 1:</label>
+            <input
+              type="number"
+              id="sem1"
+              class="form-control"
+              placeholder="Enter SGPA"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="sem2" class="form-label">Semester 2:</label>
+            <input
+              type="number"
+              id="sem2"
+              class="form-control"
+              placeholder="Enter SGPA"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="sem3" class="form-label">Semester 3:</label>
+            <input
+              type="number"
+              id="sem3"
+              class="form-control"
+              placeholder="Enter SGPA"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="sem4" class="form-label">Semester 4:</label>
+            <input
+              type="number"
+              id="sem4"
+              class="form-control"
+              placeholder="Enter SGPA"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="sem5" class="form-label">Semester 5:</label>
+            <input
+              type="number"
+              id="sem5"
+              class="form-control"
+              placeholder="Enter SGPA"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="sem6" class="form-label">Semester 6:</label>
+            <input
+              type="number"
+              id="sem6"
+              class="form-control"
+              placeholder="Enter SGPA"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="sem7" class="form-label">Semester 7:</label>
+            <input
+              type="number"
+              id="sem7"
+              class="form-control"
+              placeholder="Enter SGPA"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="sem8" class="form-label">Semester 8:</label>
+            <input
+              type="number"
+              id="sem8"
+              class="form-control"
+              placeholder="Enter SGPA"
+            />
+          </div>
+        </div>
+        <div class="text-center mt-4">
+          <button class="btn btn-green me-2" onclick="calculateCGPA()">
+            Calculate
+          </button>
+          <button class="btn btn-blue me-2" onclick="resetFields()">
+            Reset
+          </button>
+          <button class="btn btn-red" onclick="location.href='/';">Back</button>
+        </div>
+        <div class="result text-center" id="resultDisplay"></div>
+      </div>
+    </div>
+  </body>
+</html>

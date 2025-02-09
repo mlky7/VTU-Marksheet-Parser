@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SGPA & CGPA Calculator</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .centered-jumbotron {
+        font-family: "trebuchet ms";
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid centered-jumbotron">
+      <div class="jumbotron text-center p-5 bg-light rounded shadow">
+        <h1 class="display-4">Welcome!</h1>
+        <p class="lead">Easily calculate your SGPA and CGPA with our tools.</p>
+        <hr class="my-4" />
+        <p>Choose an option to get started:</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <button
+            class="btn btn-primary btn-lg"
+            onclick="location.href='/sgpa';"
+          >
+            Calculate SGPA
+          </button>
+          <button
+            class="btn btn-secondary btn-lg"
+            onclick="location.href='/cgpa';"
+          >
+            Calculate CGPA
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
