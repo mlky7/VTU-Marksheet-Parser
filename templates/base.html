@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}VTU Academic Assistant{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: { 50:'#eef4ff',100:'#dbe6ff',500:'#4f6ef7',600:'#3b57e8',700:'#2f46c8' },
+            ink:   { 900:'#0f172a', 700:'#334155', 500:'#64748b', 300:'#cbd5e1' }
+          },
+          boxShadow: { soft: '0 12px 40px -12px rgba(15,23,42,.15)' }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body class="min-h-screen font-sans text-ink-900 bg-gradient-to-br from-slate-50 via-white to-brand-50">
+  <header class="max-w-5xl mx-auto flex items-center justify-between px-6 py-5">
+    <a href="/" class="flex items-center gap-2 font-bold text-lg">
+      <span class="w-8 h-8 rounded-lg bg-brand-600 text-white grid place-items-center">🎓</span>
+      VTU Assistant
+    </a>
+    <nav class="flex gap-1 text-sm">
+      <a href="/sgpa" class="px-3 py-2 rounded-lg hover:bg-white/70">SGPA</a>
+      <a href="/cgpa" class="px-3 py-2 rounded-lg hover:bg-white/70">CGPA</a>
+    </nav>
+  </header>
+  <main class="max-w-5xl mx-auto px-6 pb-24">
+    {% block content %}{% endblock %}
+  </main>
+  {% include 'chat.html' %}
+  <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

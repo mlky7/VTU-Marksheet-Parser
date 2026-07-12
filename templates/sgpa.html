@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}SGPA Calculator · VTU Assistant{% endblock %}
+{% block content %}
+<div class="grid lg:grid-cols-3 gap-6">
+  <div class="lg:col-span-2 bg-white rounded-2xl shadow-soft border border-white p-6 md:p-8">
+    <h2 class="text-2xl font-bold">SGPA Calculator</h2>
+    <p class="text-sm text-ink-500">Pick your scheme, upload the marksheet, tweak marks if needed.</p>
+
+    <div class="grid md:grid-cols-3 gap-4 mt-6">
+      <label class="block">
+        <span class="text-xs font-semibold text-ink-700">Scheme</span>
+        <select id="scheme" class="mt-1 w-full rounded-lg border-ink-300 border bg-white px-3 py-2 focus:ring-2 focus:ring-brand-500 outline-none">
+          <option value="2022" selected>2022</option><option value="2021">2021</option><option value="2018">2018</option>
+        </select>
+      </label>
+      <label class="block">
+        <span class="text-xs font-semibold text-ink-700">Branch</span>
+        <select id="branch" class="mt-1 w-full rounded-lg border-ink-300 border bg-white px-3 py-2 focus:ring-2 focus:ring-brand-500 outline-none">
+          <option value="CSE" selected>Computer Science & Engineering</option>
+          <option value="ECE">Electronics & Communication</option>
+          <option value="ME">Mechanical Engineering</option>
+        </select>
+      </label>
+      <label class="block">
+        <span class="text-xs font-semibold text-ink-700">Semester</span>
+        <select id="semester" class="mt-1 w-full rounded-lg border-ink-300 border bg-white px-3 py-2 focus:ring-2 focus:ring-brand-500 outline-none">
+          <option value="#" selected>Select…</option>
+          <option value="Chemistry Cycle">Chemistry Cycle</option>
+          <option value="Physics Cycle">Physics Cycle</option>
+          {% for i in range(3,9) %}<option value="{{ i }}">{{ i }}</option>{% endfor %}
+        </select>
+      </label>
+    </div>
+
+    <form id="uploadForm" class="mt-6">
+      <label id="drop" for="fileInput"
+        class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-ink-300 rounded-xl p-8 cursor-pointer hover:border-brand-500 hover:bg-brand-50/40 transition">
+        <div class="text-3xl">📄</div>
+        <div class="font-semibold">Drop your marksheet PDF here</div>
+        <div class="text-xs text-ink-500">or click to browse · max 10 MB</div>
+        <input id="fileInput" type="file" name="file" accept="application/pdf" class="hidden">
+        <span id="fileName" class="text-xs text-brand-700 font-semibold"></span>
+      </label>
+      <div class="mt-3 flex items-center gap-3">
+        <button type="submit" class="px-5 py-2.5 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 disabled:opacity-50" id="uploadBtn">Extract marks</button>
+        <span id="uploadStatus" class="text-sm text-ink-500"></span>
+      </div>
+    </form>
+
+    <div id="chips" class="mt-6 flex flex-wrap gap-2"></div>
+
+    <div class="mt-6 overflow-hidden rounded-xl border border-slate-200">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 text-ink-700">
+          <tr><th class="text-left px-4 py-3">Subject</th><th class="text-left px-4 py-3">Credits</th><th class="text-left px-4 py-3">Marks (0-100)</th><th class="text-left px-4 py-3">Grade</th></tr>
+        </thead>
+        <tbody id="subjectsTableBody" class="divide-y divide-slate-100"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <aside class="bg-gradient-to-br from-brand-600 to-brand-700 text-white rounded-2xl shadow-soft p-6 h-fit sticky top-6">
+    <div class="text-xs uppercase tracking-widest opacity-80">Your SGPA</div>
+    <div id="sgpaValue" class="mt-1 text-6xl font-extrabold">—</div>
+    <div id="sgpaBreak" class="mt-2 text-sm opacity-90">Enter marks to see live SGPA.</div>
+    <div class="mt-6 grid grid-cols-2 gap-3 text-center">
+      <div class="bg-white/10 rounded-lg py-3"><div id="totalCredits" class="text-2xl font-bold">0</div><div class="text-xs opacity-80">Credits</div></div>
+      <div class="bg-white/10 rounded-lg py-3"><div id="totalPoints" class="text-2xl font-bold">0</div><div class="text-xs opacity-80">Grade points</div></div>
+    </div>
+    <a href="/cgpa" class="mt-6 block text-center bg-white/15 hover:bg-white/25 rounded-lg py-2 text-sm font-semibold">Go to CGPA →</a>
+  </aside>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/sgpa.js') }}"></script>{% endblock %}
